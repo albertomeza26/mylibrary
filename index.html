@@ -15,37 +15,25 @@
 <a><img alt="add book" class="add-book" src="images/add.svg"></a>
 </div>
 </header>
-<div class="book-first book-intro">
+<div class="book-first">
+<p class="emptiness">Your Library is Empty</p>
 <div class="summary">
 Welcome to your own personal Library.
 Click the "+" on the top right corner to begin tracking your progress.
-</div>
-<div class="list bookUno" >
-<div class="title">Title</div>
-<div class="author">Author</div>
-<div class="pages">Pages</div>
-<div class="read"><button class="read-status" id="leido">Not Read</button></div>
-<div class="icons">
-<a><img class="erase" alt="delete" src="images/trash-can-outline.svg"></a>
-</div>
-<div class="titulo"></div>
-<div class="autor"></div>
-<div class="paginas"></div>
-
 </div>
 <div class="form-modal">
 <div class="form-title"><h3>Book Information</h3></div>
 <form action="" method="post">
 <label for="title">Title</label>
-<input type="text" id="book_title" placeholder="Book Title" required>
+<input type="text" name="bTitle" id="book_title" placeholder="Book Title" required>
 <label for="author">Author</label>
-<input type="text" id="book_author" placeholder="Author" required>
+<input type="text" name="bAuthor" id="book_author" placeholder="Author" required>
 <label for="pages">Pages</label>
-<input type="number" id="pages" placeholder="100" required>
+<input type="number" name="numberP" id="pages" placeholder="100" required>
 <label class="readOptions" for="read">Read?
-<select name="Read" required>
-<option value="yes">No</option>
-<option value="no">Yes</option>
+<select id="readYN" required>
+<option value="No">No</option>
+<option value="Yes">Yes</option>
 </select>
 </label>
 <div class="button-area">

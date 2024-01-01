@@ -2,18 +2,22 @@ const cancel = document.querySelector('.cancel');
 const bookList = document.querySelector('.book-first');
 const summary = document.querySelector('.summary');
 const addBook = document.querySelector('.add-book');
-const list = document.querySelector('.list');
 const modalForm = document.querySelector('.form-modal');
 const titulo = document.querySelector('.titulo');
 const autor = document.querySelector('.autor');
 const paginas = document.querySelector('.paginas');
 const leer = document.querySelector('.leer');
 const listaDos = document.querySelector('.list-dos');
-const readStato = document.getElementById('leido');
-/*const readStato = document.querySelector('.read-stato');*/
+let readStato = document.getElementById('leido');
 const read = document.querySelector('.read');
-const readStatus = document.querySelectorAll('.read-status');
-
+const TOGGLE_CLASS_NAME = 'read-stato';
+const readStatus = document.querySelector('.read-status');
+const submitted = document.querySelector('.update');
+let bTitle = document.getElementById('book_title');
+let bAuthor = document.getElementById('book_author');
+let numberP = document.getElementById('pages');
+let readYN = document.getElementById('readYN');
+const emptyL = document.querySelector('.emptiness');
 
 let myLibrary = [];
 
@@ -23,6 +27,33 @@ function loadPg() {
     summary.style.visibility = 'visible';
 }
 
+
+function emptyLibrary() {
+    if (summary.style.visibility === 'hidden') {
+        if (bookList.classList.contains('active') === true) {
+            emptyL.style.visibility = 'hidden'
+        }
+        else if (bookList.classList.contains('active') === false) {
+            emptyL.style.visibility = 'visible'
+        };
+    }
+    else {
+        emptyL.style.visibility = 'hidden';
+    }
+}
+
+function checkActive() {
+    let activo = document.querySelectorAll('.list'); {
+        if (activo.length === 0) {
+            bookList.classList.remove('active');
+            emptyL.style.visibility = 'visible';
+        }
+        else if(activo.length > 0) {
+            emptyL.style.visibility = 'hidden';
+        }
+    }
+}
+
 function bringForm() {
     const lista = document.querySelectorAll('.list');
     bookList.classList.remove('book-intro');
@@ -30,127 +61,151 @@ function bringForm() {
     summary.style.visibility = 'hidden';
     lista.forEach((lista) => {
         lista.style.visibility = 'visible';
-        lista.classList.add('blurred');})
+        lista.classList.add('blurred');
+    })
     modalForm.style.visibility = 'visible';
 }
 
-/*function changeRead() {
-    readStatus.forEach((readStatus) => {
-    readStatus.addEventListener('click', () => {
-  if (readStatus.innerHTML === 'Not Read') {
-        readStatus.style.backgroundColor = 'rgb(0, 255, 0, .5)';
-        readStatus.innerHTML = 'Read';}
-    else if (readStatus.innerHTML === 'Read') {
-        readStatus.style.backgroundColor = 'rgb(255, 0, 0, .5)'
-        readStatus.innerHTML = 'Not Read';
-    }})});
 
-}*/
+function changeRead(event) {
+    event.target.classList.toggle(TOGGLE_CLASS_NAME)
+    if (event.target.classList.contains(TOGGLE_CLASS_NAME)) {
+        event.target.innerHTML = 'Read'
+    }
+    else {
+        event.target.innerHTML = 'Not Read'
+    }
+}
 
-function changeRead() {
-    readStatus.forEach((readStatus) => {
-  if (readStatus.innerHTML === 'Not Read') {
-        readStatus.style.backgroundColor = 'rgb(0, 255, 0, .5)';
-        readStatus.innerHTML = 'Read';}
-    else if (readStatus.innerHTML === 'Read') {
-        readStatus.style.backgroundColor = 'rgb(255, 0, 0, .5)'
-        readStatus.innerHTML = 'Not Read';
-    }});
-
+function deleteBook(event) {
+    event.target.parentNode.parentNode.parentNode.remove();
+    {
+        checkActive();
+    }
+    emptyLibrary();
 }
 
 function removeForm() {
     const lista = document.querySelectorAll('.list');
+    let inputF = document.querySelectorAll('input');
     modalForm.style.visibility = 'hidden';
+    inputF.forEach((inputF) => {
+        inputF.value = null;
+    })
     lista.forEach((lista) => {
-        lista.classList.remove('blurred');})
+        lista.classList.remove('blurred');
+    })
+    {
+    checkActive();}
+    emptyLibrary();
 }
 
 function Book(title, author, pages, read) {
-this.title = title;
-this.author = author;
-this.pages = pages;
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
     this.read = read;
-this.newInfo = function() {
-myLibrary.push({title, author, pages, read});
-};
+    this.newInfo = function () {
+        myLibrary.push({ title, author, pages, read });
+    };
 }
-   
-/*function renderBook () {
-        let bookUno = myLibrary.find(item => item.title == 'The Hobbit');
-        {let nList = document.createElement('div');
-        nList.classList.add('list');
-        nList.style.visibility = 'visible';
-        nList.innerHTML = `<div class="title">Title</div>
+
+/*Render Book*/
+
+function showme(event) {
+    let esteLibro = bTitle.value;
+    let esteAutor = bAuthor.value;
+    let paginasLibro = numberP.value;
+    let leerSN = readYN.value; {
+        if (esteLibro === '' || esteAutor === '' || paginasLibro === '') {
+            alert("Please Complete Form");
+            bringForm();
+        }
+        else if (bookList.classList.contains('active')) {
+            if (leerSN === "No") {
+                let nList = document.createElement('div');
+                nList.classList.add('list');
+                nList.style.visibility = 'visible';
+                nList.innerHTML = `<div class="title">Title</div>
         <div class="author">Author</div>
         <div class="pages">Pages</div>
-        <div class="read"><button type="submit" class="read-status">Not Read</button></div>
+        <div class="read" id="reado"><button onclick="changeRead(event)" type="submit" class="read-status" id="leido">Not Read</button></div>
         <div class="icons">
-                <a><img class="edit" alt="edit" src="images/pencil.svg"></a>
-                <a><img class="erase" alt="delete" src="images/trash-can-outline.svg"></a>
+                <a><img class="erase" onclick="deleteBook(event);emptyLibrary()" alt="delete" src="images/trash-can-outline.svg"></a>
             </div>
-        <div class="titulo">${bookUno.title}</div>
-        <div class="autor">${bookUno.author}</div>
-        <div class="paginas">${bookUno.pages}</div>`;
-        bookList.insertBefore(nList, modalForm);}
-    }*/
-    function renderBook () {
-        let bookUno = myLibrary.find(item => item.title == 'The Hobbit');
-        {let nList = document.createElement('div');
-        nList.classList.add('list');
-        nList.style.visibility = 'visible';
-            {let oList = document.createElement('div');
-            oList.classList.add('read');
-                {let boton = document.createElement('button');
-                boton.classList.add('read-status');
-                boton.setAttribute('id', 'leido');
-                boton.innerHTML = 'Not Read';
-                oList.appendChild(boton);}
-            nList.appendChild(oList);}
-        bookList.insertBefore(nList, modalForm);}
+        <div class="titulo">${esteLibro}</div>
+        <div class="autor">${esteAutor}</div>
+        <div class="paginas">${paginasLibro}</div>`;
+                bookList.insertBefore(nList, modalForm);
+            }
+            else if (leerSN === "Yes") {
+                let nList = document.createElement('div');
+                nList.classList.add('list');
+                nList.style.visibility = 'visible';
+                nList.innerHTML = `<div class="title">Title</div>
+        <div class="author">Author</div>
+        <div class="pages">Pages</div>
+        <div class="read" id="reado"><button onclick="changeRead(event)" type="submit" class="read-status read-stato" id="leido">Read</button></div>
+        <div class="icons">
+                <a><img class="erase" onclick="deleteBook(event);emptyLibrary()" alt="delete" src="images/trash-can-outline.svg"></a>
+            </div>
+        <div class="titulo">${esteLibro}</div>
+        <div class="autor">${esteAutor}</div>
+        <div class="paginas">${paginasLibro}</div>`;
+                bookList.insertBefore(nList, modalForm);
+            }
+            removeForm();
+        }
+        else {
+            if (leerSN === "No") {
+                let nList = document.createElement('div');
+                nList.classList.add('list');
+                bookList.classList.add('active');
+                nList.style.visibility = 'visible';
+                nList.innerHTML = `<div class="title">Title</div>
+        <div class="author">Author</div>
+        <div class="pages">Pages</div>
+        <div class="read" id="reado"><button onclick="changeRead(event)" type="submit" class="read-status" id="leido">Not Read</button></div>
+        <div class="icons">
+                <a><img class="erase" onclick="deleteBook(event);emptyLibrary()" alt="delete" src="images/trash-can-outline.svg"></a>
+            </div>
+        <div class="titulo">${esteLibro}</div>
+        <div class="autor">${esteAutor}</div>
+        <div class="paginas">${paginasLibro}</div>`;
+                bookList.insertBefore(nList, modalForm);
+            }
+            else if (leerSN === "Yes") {
+                let nList = document.createElement('div');
+                nList.classList.add('list');
+                bookList.classList.add('active');
+                nList.style.visibility = 'visible';
+                nList.innerHTML = `<div class="title">Title</div>
+        <div class="author">Author</div>
+        <div class="pages">Pages</div>
+        <div class="read" id="reado"><button onclick="changeRead(event)" type="submit" class="read-status read-stato" id="leido">Read</button></div>
+        <div class="icons">
+                <a><img class="erase" onclick="deleteBook(event);emptyLibrary()" alt="delete" src="images/trash-can-outline.svg"></a>
+            </div>
+        <div class="titulo">${esteLibro}</div>
+        <div class="autor">${esteAutor}</div>
+        <div class="paginas">${paginasLibro}</div>`;
+                bookList.insertBefore(nList, modalForm);
+            }
+            removeForm();
+        }
+        {
+            event.preventDefault();
+        }
     }
-   
-
-function renderDetail () {
-        let detail = document.createElement('div');
-        detail.classList.add('title');
-        detail.innerHTML = 'Title';
-        listaDos.appendChild(detail);
 }
 
-Object.setPrototypeOf(renderBook.prototype, Book.prototype);
+/*Render Book*/
 
-const theHobbit = new Book('The Hobbit', 'J.R.R Tolkien', '295 pages', 'not read');    
-theHobbit.newInfo();
-const scarface = new Book('Scarface', 'Brian de Palma', '300 pages', 'not read')
-scarface.newInfo();
+
+addBook.addEventListener('click', () => { bringForm() });
+
+cancel.addEventListener('click', () => {removeForm(); emptyLibrary()});
+
+submitted.addEventListener('click', showme);
+
 loadPg();
-
-function alerta()
-{for (let prop in myLibrary) {
-   alert (prop);
-}}
-
-/*function cadaUno() {
-    myLibrary.forEach((item) => {
-        titulo.innerHTML = `${item}`;
-    })
-}*/
-
-function bookDivs() {
-    for (let i = 1; i <= myLibrary.length; i++) {
-        renderBook();
-    }
-}
-
-function cadaUno() {
-    let bookUno = myLibrary.find(item => item.title == 'The Hobbit');
-    alert(bookUno.title);
-}
-
-
-addBook.addEventListener('click', () => {bringForm()});
-
-cancel.addEventListener('click', () => {removeForm()});
-
-readStato.addEventListener('click', () => changeRead());
