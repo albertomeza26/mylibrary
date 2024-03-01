@@ -28,19 +28,7 @@ function loadPg() {
 }
 
 
-function emptyLibrary() {
-    if (summary.style.visibility === 'hidden') {
-        if (bookList.classList.contains('active') === true) {
-            emptyL.style.visibility = 'hidden'
-        }
-        else if (bookList.classList.contains('active') === false) {
-            emptyL.style.visibility = 'visible'
-        };
-    }
-    else {
-        emptyL.style.visibility = 'hidden';
-    }
-}
+
 
 function checkActive() {
     let activo = document.querySelectorAll('.list'); {
